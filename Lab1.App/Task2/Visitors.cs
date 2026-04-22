@@ -8,18 +8,15 @@ namespace Lab1.App.Task2;
 public interface IDocumentVisitor
 {
     void VisitParagraph(Paragraph paragraph);
-    void VisitImage(Image image);
-    void VisitTable(Table table);
+    void VisitImage(ImageElement image);
+    void VisitTable(TableElement table);
 }
 
-public interface IDocumentExportVisitor : IDocumentVisitor
-{
-    string GetOutput();
-}
-
-public sealed class HtmlExportVisitor : IDocumentExportVisitor
+public sealed class HtmlVisitor : IDocumentVisitor
 {
     private readonly StringBuilder _builder = new();
+
+    public string Result => _builder.ToString();
 
     public void VisitParagraph(Paragraph paragraph)
     {
@@ -28,23 +25,14 @@ public sealed class HtmlExportVisitor : IDocumentExportVisitor
         _builder.AppendLine("</p>");
     }
 
-    public void VisitImage(Image image)
+    public void VisitImage(ImageElement image)
     {
         _builder.Append("<img src=\"");
-        _builder.Append(HtmlEscapeAttribute(image.Url));
-        _builder.Append('"');
-
-        if (!string.IsNullOrWhiteSpace(image.AltText))
-        {
-            _builder.Append(" alt=\"");
-            _builder.Append(HtmlEscapeAttribute(image.AltText!));
-            _builder.Append('"');
-        }
-
-        _builder.AppendLine(" />");
+        _builder.Append(HtmlEscapeAttribute(image.Path));
+        _builder.AppendLine("\" />");
     }
 
-    public void VisitTable(Table table)
+    public void VisitTable(TableElement table)
     {
         _builder.AppendLine("<table>");
 
@@ -65,8 +53,6 @@ public sealed class HtmlExportVisitor : IDocumentExportVisitor
         _builder.AppendLine("</table>");
     }
 
-    public string GetOutput() => _builder.ToString();
-
     private static string HtmlEscape(string text) =>
         text
             .Replace("&", "&amp;")
@@ -77,9 +63,11 @@ public sealed class HtmlExportVisitor : IDocumentExportVisitor
         HtmlEscape(text).Replace("\"", "&quot;");
 }
 
-public sealed class MarkdownExportVisitor : IDocumentExportVisitor
+public sealed class MarkdownVisitor : IDocumentVisitor
 {
     private readonly StringBuilder _builder = new();
+
+    public string Result => _builder.ToString();
 
     public void VisitParagraph(Paragraph paragraph)
     {
@@ -87,18 +75,15 @@ public sealed class MarkdownExportVisitor : IDocumentExportVisitor
         _builder.AppendLine();
     }
 
-    public void VisitImage(Image image)
+    public void VisitImage(ImageElement image)
     {
-        var alt = image.AltText ?? string.Empty;
-        _builder.Append("![");
-        _builder.Append(alt.Replace("]", "\\]"));
-        _builder.Append("](");
-        _builder.Append(image.Url.Replace(")", "\\)"));
+        _builder.Append("![image](");
+        _builder.Append(image.Path.Replace(")", "\\)"));
         _builder.AppendLine(")");
         _builder.AppendLine();
     }
 
-    public void VisitTable(Table table)
+    public void VisitTable(TableElement table)
     {
         if (table.Rows.Count == 0)
         {
@@ -137,6 +122,4 @@ public sealed class MarkdownExportVisitor : IDocumentExportVisitor
         static string SeparatorLine(int columnCount) =>
             "| " + string.Join(" | ", Enumerable.Repeat("---", columnCount)) + " |";
     }
-
-    public string GetOutput() => _builder.ToString();
 }

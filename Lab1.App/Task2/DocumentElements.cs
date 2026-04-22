@@ -26,15 +26,13 @@ public sealed class Paragraph : IDocumentElement
     }
 }
 
-public sealed class Image : IDocumentElement
+public sealed class ImageElement : IDocumentElement
 {
-    public string Url { get; }
-    public string? AltText { get; }
+    public string Path { get; }
 
-    public Image(string url, string? altText = null)
+    public ImageElement(string path)
     {
-        Url = url ?? throw new ArgumentNullException(nameof(url));
-        AltText = altText;
+        Path = path ?? throw new ArgumentNullException(nameof(path));
     }
 
     public void Accept(IDocumentVisitor visitor)
@@ -44,11 +42,11 @@ public sealed class Image : IDocumentElement
     }
 }
 
-public sealed class Table : IDocumentElement
+public sealed class TableElement : IDocumentElement
 {
     public IReadOnlyList<IReadOnlyList<string>> Rows { get; }
 
-    public Table(IEnumerable<IEnumerable<string>> rows)
+    public TableElement(IEnumerable<IEnumerable<string>> rows)
     {
         ArgumentNullException.ThrowIfNull(rows);
 

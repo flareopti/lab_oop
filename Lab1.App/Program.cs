@@ -61,27 +61,28 @@ static void DemoTask2_Visitor()
 	Console.WriteLine();
 	Console.WriteLine("=== ЛР1 / Задание №2 / Вариант №7: Визитор (экспорт HTML/Markdown) ===");
 
-	var document = new Document(
-		new IDocumentElement[]
-		{
-			new Paragraph("Пример документа: абзац, картинка и таблица."),
-			new Image("https://example.com/image.png", "Example image"),
-			new Table(
-				new[]
-				{
-					new[] { "Name", "Score" },
-					new[] { "Alice", "10" },
-					new[] { "Bob", "7" },
-				}),
-		});
+	var document = new Document();
+	document.Add(new Paragraph("Пример документа: абзац, картинка и таблица."));
+	document.Add(new ImageElement("https://example.com/image.png"));
+	document.Add(
+		new TableElement(
+			new[]
+			{
+				new[] { "Name", "Score" },
+				new[] { "Alice", "10" },
+				new[] { "Bob", "7" },
+			}));
 
-	var html = document.Export(new HtmlExportVisitor());
-	var markdown = document.Export(new MarkdownExportVisitor());
+	var htmlVisitor = new HtmlVisitor();
+	document.Export(htmlVisitor);
+
+	var markdownVisitor = new MarkdownVisitor();
+	document.Export(markdownVisitor);
 
 	Console.WriteLine("--- HTML ---");
-	Console.WriteLine(html);
+	Console.WriteLine(htmlVisitor.Result);
 	Console.WriteLine("--- Markdown ---");
-	Console.WriteLine(markdown);
+	Console.WriteLine(markdownVisitor.Result);
 }
 
 static void DemoTask3_TreeCount()

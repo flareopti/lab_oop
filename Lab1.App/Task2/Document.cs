@@ -7,30 +7,37 @@ namespace Lab1.App.Task2;
 
 public sealed class Document
 {
-    public IReadOnlyList<IDocumentElement> Elements { get; }
+    private readonly List<IDocumentElement> _elements = new();
+
+    public IReadOnlyList<IDocumentElement> Elements => new ReadOnlyCollection<IDocumentElement>(_elements);
+
+    public Document()
+    {
+    }
 
     public Document(IEnumerable<IDocumentElement> elements)
     {
         ArgumentNullException.ThrowIfNull(elements);
 
-        var list = elements.ToList();
-        if (list.Any(e => e is null))
+        foreach (var element in elements)
         {
-            throw new ArgumentException("Document elements must not contain null", nameof(elements));
+            Add(element);
         }
-
-        Elements = new ReadOnlyCollection<IDocumentElement>(list);
     }
 
-    public string Export(IDocumentExportVisitor visitor)
+    public void Add(IDocumentElement element)
+    {
+        ArgumentNullException.ThrowIfNull(element);
+        _elements.Add(element);
+    }
+
+    public void Export(IDocumentVisitor visitor)
     {
         ArgumentNullException.ThrowIfNull(visitor);
 
-        foreach (var element in Elements)
+        foreach (var element in _elements)
         {
             element.Accept(visitor);
         }
-
-        return visitor.GetOutput();
     }
 }
