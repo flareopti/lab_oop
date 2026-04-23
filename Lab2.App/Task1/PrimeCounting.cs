@@ -14,6 +14,10 @@ public static class PrimeCounting
         Console.WriteLine($"Потоков: {threadCount}");
 
         var ranges = RangePartitioner.SplitInclusiveRange(1, 10_000, threadCount).ToArray();
+        Console.WriteLine("Диапазоны для потоков:");
+        for (var i = 0; i < ranges.Length; i++)        {
+            Console.WriteLine($"Поток {i + 1}: {ranges[i].Start}..{ranges[i].End}");
+        }   
 
         RunVersion("Версия 1: Monitor/lock", ranges, () => new LockCounter());
         RunVersion("Версия 2: Mutex", ranges, () => new MutexCounter());
