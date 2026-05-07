@@ -33,7 +33,9 @@ var report = app.CreateReport();
 IReportExporter[] exporters =
 {
 	new CsvReportExporter(),
+	new HtmlReportExporter(),
 	new JsonReportExporter(),
+	new TxtReportExporter(),
 };
 
 var requestedFormat = GetRequestedFormat(args);

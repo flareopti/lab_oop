@@ -73,7 +73,9 @@ dotnet run --project Lab3.App -c Release
 
 ```bash
 dotnet run --project Lab3.App -c Release -- --format csv
+dotnet run --project Lab3.App -c Release -- --format html
 dotnet run --project Lab3.App -c Release -- --format json
+dotnet run --project Lab3.App -c Release -- --format txt
 ```
 
 
