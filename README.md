@@ -51,5 +51,30 @@ dotnet build Lab2.sln -c Release
 dotnet run --project Lab2.App -c Release
 ```
 
+## Лабораторная работа №3
+
+Варианты:
+
+- **Задание №1** → **вариант №3: Генератор отчётов (SOLID)**
+
+Сборка:
+
+```bash
+dotnet build Lab3.sln -c Release
+```
+
+Запуск:
+
+```bash
+dotnet run --project Lab3.App -c Release
+```
+
+Выбор одного формата экспорта (необязательно):
+
+```bash
+dotnet run --project Lab3.App -c Release -- --format csv
+dotnet run --project Lab3.App -c Release -- --format json
+```
+
 
 
